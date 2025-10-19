@@ -72,18 +72,18 @@ def constructible(n) :
     return True
 
 def polygone(n) :
-  if not constructible(n) :
-      return "ce polygone n'est pas constructible"
-  else :
-   for i in range(n):
+   if not constructible(n) :
+     return "ce polygone n'est pas constructible"
+   else :
+    for i in range(n):
       x1 = math.cos((2*i*math.pi)/n)
       y1 = math.sin((2*i*math.pi)/n)
       x2 = math.cos((2*(i+1)*math.pi)/n)
       y2 = math.sin((2*(i+1)*math.pi)/n)
       plt.plot([x1,x2],[y1,y2], color='blue', linewidth=1.5, zorder=1)
       plt.scatter([x1], [y1], color='black', s=20, zorder=2)
-  plt.title(f"Polygone régulier à {n} cotés")
-  print("ce polygone est constructible")
+    plt.title(f"Polygone régulier à {n} cotés")
+    print("ce polygone est constructible")
 
 
 # Tester les entiers de 1 à 25
@@ -92,14 +92,14 @@ def polygone(n) :
 # print(f"{n:2} → {statut}")
 
 
-print(polygone(5))
+print(polygone(9))
 
-plt.show()
+#plt.show()
 
 # PARTIE 2 : cyclotomic polynomial :
 
 
-from sympy import symbols, Poly, sympify, cyclotomic_poly
+from sympy import symbols, Poly, sympify, cyclotomic_poly, is_primitive_root, gcd_list, gcd_terms
 
 x = symbols('x')
 
@@ -171,5 +171,26 @@ def polynome(p) :
 #print(polynome(cyclotomic_poly(3)))
 
 l = [polynome(cyclotomic_poly(i)) for i in range(1,105)]
-print(l)
+#print(l)
+
+# PARTIE 3 : polynome cyclo dans le cercle unité :
+
+#fonction 1 : liste des k premiers avec n :
+def list_k_et_n_prem(n) :
+    l = []
+    for k in range(n) :
+        if math.gcd(k,n) == 1 :
+            l.append(k)
+    return l
+
+#fonction 2 : coordonnées des racines primitives :
+def coord_prim(n) :
+    l = list_k_et_n_prem(n)
+    for k in l :
+        x1 = math.cos((2 * k * math.pi) / n)
+        y1 = math.sin((2 * k * math.pi) / n)
+        plt.scatter([x1], [y1], color='black', s=20, zorder=2)
+
+print(coord_prim(9))
+plt.show()
 
