@@ -80,8 +80,8 @@ def polygone(n) :
       y1 = math.sin((2*i*math.pi)/n)
       x2 = math.cos((2*(i+1)*math.pi)/n)
       y2 = math.sin((2*(i+1)*math.pi)/n)
-      plt.plot([x1,x2],[y1,y2], color='blue', linewidth=1.5, zorder=1)
-      plt.scatter([x1], [y1], color='black', s=20, zorder=2)
+      plt.plot([x1,x2],[y1,y2], color='blue', linewidth=1.5, zorder=2)
+      plt.scatter([x1], [y1], color='black', s=20, zorder=3)
     plt.title(f"Polygone régulier à {n} cotés")
     print("ce polygone est constructible")
 
@@ -92,14 +92,13 @@ def polygone(n) :
 # print(f"{n:2} → {statut}")
 
 
-print(polygone(9))
-
-#plt.show()
+# print(polygone(10))
+# plt.show()
 
 # PARTIE 2 : cyclotomic polynomial :
 
 
-from sympy import symbols, Poly, sympify, cyclotomic_poly, is_primitive_root, gcd_list, gcd_terms
+from sympy import symbols, Poly, sympify, cyclotomic_poly, is_primitive_root, gcd_list, gcd_terms, isprime
 
 x = symbols('x')
 
@@ -189,8 +188,48 @@ def coord_prim(n) :
     for k in l :
         x1 = math.cos((2 * k * math.pi) / n)
         y1 = math.sin((2 * k * math.pi) / n)
-        plt.scatter([x1], [y1], color='black', s=20, zorder=2)
+        plt.scatter([x1], [y1], color='black', s=20, zorder=3)
 
-print(coord_prim(9))
+#print(coord_prim(25))
+
+#fonction 3 : decomposition de la figure cyclo dans le cas n = p^alpha :
+def decomp_cyclo(p,a) :
+    plt.title(f"figure cyclotomique pour n = {p**a}")
+    n = p**a
+    if isprime(p) :
+        if a > 1 :
+            coord_prim(p**a)
+            # w = exp(2*i*pi/n) : premiere racine prim
+            for i in range(1,p) :
+                x_i = math.cos((2 * i * math.pi) / n)
+                y_i = math.sin((2 * i * math.pi) / n)
+             # w**i = (exp(2*i*pi/n))**i
+                for k in range(0,p**(a-1)) :
+                    x_ikp = math.cos((2 * (i+k*p) * math.pi) / n)
+                    y_ikp = math.sin((2 * (i+k*p) * math.pi) / n)
+                  # w**(i+k*p) = (x_ikp,y_ikp)
+
+                    x_ik1p = math.cos((2 * (i + (k+1) * p) * math.pi) / n)
+                    y_ik1p = math.sin((2 * (i + (k+1) * p) * math.pi) / n)
+                  # w**(i+(k+1)*p) = (x_ik1p,y_ik1p)
+                    plt.plot([x_ikp, x_ik1p], [y_ikp, y_ik1p], color='blue', linewidth=1.5, zorder=2)
+
+
+# fonction 4 : decomposition des polygones en figures cyclotomiques :
+
+''' def decomp_polyg(n) :
+    for i in range(n):
+      x1 = math.cos((2*i*math.pi)/n)
+      y1 = math.sin((2*i*math.pi)/n)
+      x2 = math.cos((2*(i+1)*math.pi)/n)
+      y2 = math.sin((2*(i+1)*math.pi)/n)
+      # plt.plot([x1,x2],[y1,y2], color='blue', linewidth=1.5, zorder=2)
+      plt.scatter([x1], [y1], color='black', s=20, zorder=3)
+    plt.title(f"Polygone régulier à {n} cotés")
+    for k in range(n) :
+        if k//n :
+            coord_prim(k) '''
+
+print(decomp_cyclo(3,4))
+
 plt.show()
-
